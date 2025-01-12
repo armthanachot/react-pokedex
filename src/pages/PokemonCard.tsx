@@ -5,16 +5,18 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, IconButton } from '@mui/material';
-import SimpleDialog from './Dialog';
+import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos } from '@mui/icons-material';
-import { defaultImg, pokemonImage } from '../../dto/pokemon';
+import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
 
 // change img to object of normal and shiny (contain front and back)
-export default function ActionAreaCard({ defaultImage, name, types, animationSrc, voice, no }: { defaultImage: defaultImg, name: string, types: string[], animationSrc?: string, voice?: string, no?: number }) {
+export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number }) {
 
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const [pokemonImg, setPokemonImg] = useState<pokemonImage>({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
+
+    const [animationSrc, setAnimationSrc] = useState<string>(showDownImage.front_default);
 
     const [shiny, setShiny] = useState(false);
 
@@ -29,6 +31,7 @@ export default function ActionAreaCard({ defaultImage, name, types, animationSrc
     }
 
     useEffect(() => {
+        setAnimationSrc(shiny ? showDownImage.front_shiny : showDownImage.front_default);
         return setPokemonImg(shiny ? { front: defaultImage.front_shiny, back: defaultImage.back_shiny, show: defaultImage.front_shiny } : { front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
     }, [shiny])
 
@@ -38,6 +41,10 @@ export default function ActionAreaCard({ defaultImage, name, types, animationSrc
     useEffect(() => {
         return setPokemonImg(flip ? { front: pokemonImg.front, back: pokemonImg.front, show: pokemonImg.back } : { front: pokemonImg.front, back: pokemonImg.back, show: pokemonImg.front });
     }, [flip])
+
+    const onCloseDialog = () => {
+        setDialogOpen(false);
+    }
 
     return (
         <Card>
@@ -71,13 +78,6 @@ export default function ActionAreaCard({ defaultImage, name, types, animationSrc
                                         <AutoAwesome fontSize='large' htmlColor='#eef11c' />
                                     </IconButton>
                                 </Box>
-                                
-                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                    <IconButton onClick={() => flipPokemon()}>
-                                        <FlipCameraIos fontSize='large' htmlColor='#f10d0d' />
-                                    </IconButton>
-                                </Box>
-
                                 {
                                     dialogOpen &&
                                     SimpleDialog({
@@ -92,7 +92,7 @@ export default function ActionAreaCard({ defaultImage, name, types, animationSrc
                                                 </CardContent>
                                             </CardActionArea>
                                         </Card>)
-                                        , onCloseDialog: () => setDialogOpen(false),
+                                        , onCloseDialog: () => onCloseDialog(),
                                         voice: voice
                                     })
                                 }
@@ -101,6 +101,12 @@ export default function ActionAreaCard({ defaultImage, name, types, animationSrc
                         }
                     </Typography>
                 </CardContent>
+
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <IconButton onClick={() => flipPokemon()}>
+                        <FlipCameraIos fontSize='large' htmlColor='#f10d0d' />
+                    </IconButton>
+                </Box>
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div" sx={{ color: '#000000' }}>
                         {name}

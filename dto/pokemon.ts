@@ -17,6 +17,13 @@ const defaultImg = Type.Object({
     back_shiny: Type.String(),
 })
 
+const showDownImage = Type.Object({
+    front_default: Type.String(),
+    back_default: Type.String(),
+    front_shiny: Type.String(),
+    back_shiny: Type.String(),
+})
+
 
 const pokemonImage = Type.Object({
     front: Type.String(),
@@ -36,8 +43,7 @@ const PokemonInfo = Type.Object({
                 front_default: Type.String(),
             }),
             showdown: Type.Object({
-                front_default: Type.String(),
-                back_default: Type.String(),
+                ...showDownImage.properties,
             }),
         }),
     }),
@@ -67,4 +73,5 @@ export type AllPokemon = Static<typeof AllPokemon>;
 export type PokemonInfo = Static<typeof PokemonInfo>;
 export type PokemonTypeIcon = Static<typeof PokemonTypeIcon>;
 export type defaultImg = Static<typeof defaultImg>;
+export type showDownImage = Static<typeof showDownImage>;
 export type pokemonImage = Static<typeof pokemonImage>;

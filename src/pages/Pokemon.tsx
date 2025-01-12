@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { HttpBase } from "../api/axios";
 import { AllPokemon, PokemonInfo, PokemonTypeIcon } from "../../dto/pokemon";
-import ActionAreaCard from "../components/Card";
+import PokemonCard from "./PokemonCard";
 import { Box, Grid2 } from "@mui/material";
 import { splitUrl } from "../utils/str";
 
@@ -41,13 +41,11 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                     {pokemon?.results.map((p) => (
                         //size คือ จำนวน grid เต็ม 12 ที่จะใช้ ในที่นี้คือ 4 จะเท่ากับ 3 แถว
                         <Grid2 itemID="pokemon" key={p.name} size={{ xl: 4, lg: 4, md: 6, sm: 12 }}>
-                            <ActionAreaCard
-                                // imgSrc={p.info.sprites.front_default}
-                                // imgShinySrc={p.info.sprites.front_shiny}
+                            <PokemonCard
                                 defaultImage={p.info.sprites}
                                 name={p.name}
                                 types={p.info.types.map(t => t.type.icon.sprites["generation-viii"]["sword-shield"].name_icon)}
-                                animationSrc={p.info.sprites.other.showdown.front_default}
+                                showDownImage={p.info.sprites.other.showdown}
                                 voice={p.info.cries.legacy}
                                 no={Number(splitUrl(p.url, '/')[6]) || 0}
                             />
