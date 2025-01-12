@@ -15,8 +15,11 @@ const PokemonInfo = Type.Object({
         latest: Type.String(),
         legacy: Type.String(),
     }),
-    sprites : Type.Object({
+    sprites: Type.Object({
         front_default: Type.String(),
+        back_default: Type.String(),
+        front_shiny: Type.String(),
+        back_shiny: Type.String(),
         other: Type.Object({
             dream_world: Type.Object({
                 front_default: Type.String(),
