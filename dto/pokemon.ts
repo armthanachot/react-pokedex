@@ -10,16 +10,27 @@ const PokemonTypeIcon = Type.Object({
     })
 })
 
+const defaultImg = Type.Object({
+    front_default: Type.String(),
+    back_default: Type.String(),
+    front_shiny: Type.String(),
+    back_shiny: Type.String(),
+})
+
+
+const pokemonImage = Type.Object({
+    front: Type.String(),
+    back: Type.String(),
+    show: Type.String(),
+})
+
 const PokemonInfo = Type.Object({
     cries: Type.Object({
         latest: Type.String(),
         legacy: Type.String(),
     }),
     sprites: Type.Object({
-        front_default: Type.String(),
-        back_default: Type.String(),
-        front_shiny: Type.String(),
-        back_shiny: Type.String(),
+        ...defaultImg.properties,
         other: Type.Object({
             dream_world: Type.Object({
                 front_default: Type.String(),
@@ -55,3 +66,5 @@ const AllPokemon = Type.Object({
 export type AllPokemon = Static<typeof AllPokemon>;
 export type PokemonInfo = Static<typeof PokemonInfo>;
 export type PokemonTypeIcon = Static<typeof PokemonTypeIcon>;
+export type defaultImg = Static<typeof defaultImg>;
+export type pokemonImage = Static<typeof pokemonImage>;

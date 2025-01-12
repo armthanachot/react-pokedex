@@ -6,32 +6,38 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, IconButton } from '@mui/material';
 import SimpleDialog from './Dialog';
-import { AutoAwesome, PlayArrow } from '@mui/icons-material';
+import { AutoAwesome, PlayArrow, FlipCameraIos } from '@mui/icons-material';
+import { defaultImg, pokemonImage } from '../../dto/pokemon';
 
-
-export default function ActionAreaCard({ imgSrc, imgShinySrc, name, types, animationSrc, voice, no }: { imgSrc: string, imgShinySrc?: string, name: string, types: string[], animationSrc?: string, voice?: string, no?: number }) {
+// change img to object of normal and shiny (contain front and back)
+export default function ActionAreaCard({ defaultImage, name, types, animationSrc, voice, no }: { defaultImage: defaultImg, name: string, types: string[], animationSrc?: string, voice?: string, no?: number }) {
 
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const [pokemonImg, setPokemonImg] = useState<string>(imgSrc);
+    const [pokemonImg, setPokemonImg] = useState<pokemonImage>({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
 
     const [shiny, setShiny] = useState(false);
+
+    const [flip, setFlip] = useState(false);
 
     const playAnimation = () => {
         setDialogOpen(true);
     }
-
-    useEffect(() => {
-        setPokemonImg(imgSrc);
-    }, [])
 
     const convertToshiny = () => {
         setShiny(!shiny);
     }
 
     useEffect(() => {
-        setPokemonImg(shiny? (imgShinySrc || imgSrc) : imgSrc);
+        return setPokemonImg(shiny ? { front: defaultImage.front_shiny, back: defaultImage.back_shiny, show: defaultImage.front_shiny } : { front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
     }, [shiny])
+
+    const flipPokemon = () => {
+        setFlip(!flip);
+    }
+    useEffect(() => {
+        return setPokemonImg(flip ? { front: pokemonImg.front, back: pokemonImg.front, show: pokemonImg.back } : { front: pokemonImg.front, back: pokemonImg.back, show: pokemonImg.front });
+    }, [flip])
 
     return (
         <Card>
@@ -43,7 +49,7 @@ export default function ActionAreaCard({ imgSrc, imgShinySrc, name, types, anima
                     <CardMedia
                         sx={{ padding: 2 }}
                         component="img"
-                        src={pokemonImg}
+                        src={pokemonImg.show}
                         alt={name}
                     />
                     <Typography variant="body2" sx={{ color: 'text.secondary', marginLeft: 2 }}>
@@ -63,6 +69,12 @@ export default function ActionAreaCard({ imgSrc, imgShinySrc, name, types, anima
                                     </IconButton>
                                     <IconButton onClick={() => convertToshiny()}>
                                         <AutoAwesome fontSize='large' htmlColor='#eef11c' />
+                                    </IconButton>
+                                </Box>
+                                
+                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                    <IconButton onClick={() => flipPokemon()}>
+                                        <FlipCameraIos fontSize='large' htmlColor='#f10d0d' />
                                     </IconButton>
                                 </Box>
 

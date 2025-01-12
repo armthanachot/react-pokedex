@@ -42,8 +42,9 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                         //size คือ จำนวน grid เต็ม 12 ที่จะใช้ ในที่นี้คือ 4 จะเท่ากับ 3 แถว
                         <Grid2 itemID="pokemon" key={p.name} size={{ xl: 4, lg: 4, md: 6, sm: 12 }}>
                             <ActionAreaCard
-                                imgSrc={p.info.sprites.front_default}
-                                imgShinySrc={p.info.sprites.front_shiny}
+                                // imgSrc={p.info.sprites.front_default}
+                                // imgShinySrc={p.info.sprites.front_shiny}
+                                defaultImage={p.info.sprites}
                                 name={p.name}
                                 types={p.info.types.map(t => t.type.icon.sprites["generation-viii"]["sword-shield"].name_icon)}
                                 animationSrc={p.info.sprites.other.showdown.front_default}
