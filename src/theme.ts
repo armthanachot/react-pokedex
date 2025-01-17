@@ -14,7 +14,7 @@ const theme = createTheme({
         },
         text: {
             primary: '#ffffff', // สีฟอนต์หลัก
-            secondary: '#666666', // สีฟอนต์รอง
+            secondary: '#ffffff', // สีฟอนต์รอง
           },
     },
     typography: {

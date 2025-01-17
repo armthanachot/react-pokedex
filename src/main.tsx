@@ -5,12 +5,16 @@ import './index.css';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
+import DemoContext from './example/context/Demo';
+import Query from './example/query/PokemonIndex';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* เพิ่มเพื่อรีเซ็ตสไตล์ */}
       <App />
+      {/* <DemoContext /> */}
+      {/* <Query /> */}
     </ThemeProvider>
   </React.StrictMode>,
 );
