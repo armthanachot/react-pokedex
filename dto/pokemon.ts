@@ -1,77 +1,73 @@
-import { Static, Type } from "@sinclair/typebox";
+export type PokemonTypeIcon = {
+    sprites:{
+        "generation-viii":{
+            "sword-shield":{
+                name_icon: string
+            }
+        }
+    }
+}
 
-const PokemonTypeIcon = Type.Object({
-    sprites: Type.Object({
-        "generation-viii": Type.Object({
-            "sword-shield": Type.Object({
-                name_icon: Type.String(),
-            })
-        })
-    })
-})
+export type defaultImg = {
+    front_default: string,
+    back_default: string,
+    front_shiny: string,
+    back_shiny: string,
+}
 
-const defaultImg = Type.Object({
-    front_default: Type.String(),
-    back_default: Type.String(),
-    front_shiny: Type.String(),
-    back_shiny: Type.String(),
-})
+export type showDownImage = {
+    front_default: string,
+    back_default: string,
+    front_shiny: string,
+    back_shiny: string,
+}
 
-const showDownImage = Type.Object({
-    front_default: Type.String(),
-    back_default: Type.String(),
-    front_shiny: Type.String(),
-    back_shiny: Type.String(),
-})
+export type pokemonImage = {
+    front: string,
+    back: string,
+    show: string,
+}
 
+export type PokemonInfo = {
+    cries: {
+        latest: string,
+        legacy: string,
+    },
+    sprites: {
+        front_default: string,
+        back_default: string,
+        front_shiny: string,
+        back_shiny: string,
+        other: {
+            dream_world: {
+                front_default: string
+            },
+            showdown: {
+                front_default: string,
+                back_default: string,
+                front_shiny: string,
+                back_shiny: string,
+            }
+        }
+    },
+    types: {
+        type: {
+            name: string,
+            url: string,
+            icon: PokemonTypeIcon
+        }
+    }[]
+}
 
-const pokemonImage = Type.Object({
-    front: Type.String(),
-    back: Type.String(),
-    show: Type.String(),
-})
+export type PokemonResult = {
+    name: string,
+    url: string,
+    info: PokemonInfo
+}
 
-const PokemonInfo = Type.Object({
-    cries: Type.Object({
-        latest: Type.String(),
-        legacy: Type.String(),
-    }),
-    sprites: Type.Object({
-        ...defaultImg.properties,
-        other: Type.Object({
-            dream_world: Type.Object({
-                front_default: Type.String(),
-            }),
-            showdown: Type.Object({
-                ...showDownImage.properties,
-            }),
-        }),
-    }),
-    types: Type.Array(Type.Object({
-        type: Type.Object({
-            name: Type.String(),
-            url: Type.String(),
-            icon: PokemonTypeIcon,
-        }),
-    })),
-})
-
-const AllPokemon = Type.Object({
-    count: Type.Number(),
-    next: Type.String(),
-    previous: Type.Null(),
-    results: Type.Array(Type.Object({
-        name: Type.String(),
-        url: Type.String(),
-        info: PokemonInfo,
-    })),
-});
-
-
-
-export type AllPokemon = Static<typeof AllPokemon>;
-export type PokemonInfo = Static<typeof PokemonInfo>;
-export type PokemonTypeIcon = Static<typeof PokemonTypeIcon>;
-export type defaultImg = Static<typeof defaultImg>;
-export type showDownImage = Static<typeof showDownImage>;
-export type pokemonImage = Static<typeof pokemonImage>;
+export type AllPokemon = {
+    count: number,
+    next: string,
+    previous: null,
+    results: PokemonResult[]
+}

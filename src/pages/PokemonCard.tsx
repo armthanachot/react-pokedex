@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, IconButton } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
-import { AutoAwesome, PlayArrow, FlipCameraIos, LocalFireDepartment, NoteAdd } from '@mui/icons-material';
+import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
 import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
 
 // change img to object of normal and shiny (contain front and back)
@@ -26,33 +26,34 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         shiny: false
     });
 
-    const playAnimation = () => {
+    const playAnimation = useCallback(() => {
         setDialogState({
             animationDialog: true,
             noteDialog: false
         });
-    }
+    }, [dialogState.animationDialog]);
 
-    const convertToshiny = () => {
+    const convertToshiny = useCallback(() => {
         setPokemonFunctionState(prevState => ({
             ...prevState,
             shiny: !prevState.shiny
         }));
-    }
+    }, [pokemonFunctionState.shiny]);
 
     useEffect(() => {
         setAnimationSrc(pokemonFunctionState.shiny ? showDownImage.front_shiny : showDownImage.front_default);
         setPokemonImg(pokemonFunctionState.shiny ? { front: defaultImage.front_shiny, back: defaultImage.back_shiny, show: defaultImage.front_shiny } : { front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
     }, [pokemonFunctionState.shiny])
 
-    const flipPokemon = () => {
+    const flipPokemon = useCallback(() => {
         setPokemonFunctionState(prevState => ({
             ...prevState,
             flip: !prevState.flip,
         }));
-    }
+    }, [pokemonFunctionState.flip]);
+
     useEffect(() => {
-        setPokemonImg((prevState)=>{
+        setPokemonImg((prevState) => {
             return {
                 ...prevState,
                 show: pokemonFunctionState.flip ? prevState.back : prevState.front
