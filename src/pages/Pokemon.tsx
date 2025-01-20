@@ -37,7 +37,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
         queryFn: () => fetchPokemon(url),
     })
 
-    // ใช้ useCallback เพื่อป้องกันการเรียกใช้งานซ้ำๆ ของ function นี้ โดย function จะถูกเรียกต่อเมื่อ isLoading หรือ pokemon มีการเปลี่ยนแปลง
+    // ใช้ useCallback เพื่อป้องกันการเรียกใช้งานซ้ำๆ ของ function นี้ โดย function จะถูกเรียกต่อเมื่อ isLoading หรือ pokemon มีการเปลี่ยนแปลง และยังเหมาะกับ function ที่ถูกใช่้งานเป็น props ของ component อื่นๆ
     const handleNext = useCallback(() => {
         if (!isLoading && pokemon?.next) {
             setUrl(pokemon.next);
