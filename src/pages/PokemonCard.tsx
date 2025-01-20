@@ -1,13 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { MouseEventHandler, ReactNode, useCallback, useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import { Box, IconButton } from '@mui/material';
+import { Box, SvgIconOwnProps } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
 import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
+import IconBtn from '../components/IconBtn';
+import { SvgIconComponent } from "@mui/icons-material";
 
 // change img to object of normal and shiny (contain front and back)
 export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number }) {
@@ -61,12 +63,63 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         });
     }, [pokemonFunctionState.flip])
 
-    const onCloseAnimationDialog = () => {
-        setDialogState({
-            animationDialog: false,
-            noteDialog: false
-        });
+    const iconBtnStyle: {
+        [key: string]: SvgIconOwnProps
+    } = {
+        playAnimation: {
+            fontSize: 'large',
+            htmlColor: '#038a8c'
+        },
+        convertToshiny: {
+            fontSize: 'large',
+            htmlColor: '#eef11c'
+        },
+        flipPokemon: {
+            fontSize: 'large',
+            htmlColor: '#f10d0d'
+        },
+        noteAdd: {
+            fontSize: 'medium',
+            htmlColor: '#ce6004'
+        }
     }
+
+    const boxSx = {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    }
+
+    const renderIconButton = ({ IconComponent, onClick, iconProps }: { IconComponent: SvgIconComponent, onClick: MouseEventHandler, iconProps: SvgIconOwnProps }) => (
+        <IconBtn Icon={IconComponent} onClick={onClick} iconProp={iconProps} />
+    );
+
+    const cardContent: {
+        [key: string]: ReactNode
+    } = {
+        animationContent: (<Card>
+            <CardActionArea>
+                <CardContent>
+                    <CardMedia
+                        component="img"
+                        src={animationSrc}
+                        alt={name} />
+                </CardContent>
+            </CardActionArea>
+        </Card>),
+        noteContent: (
+            <Card>
+                <CardActionArea>
+                    <CardContent>
+                        <CardMedia
+                            component="img"
+                            src={animationSrc}
+                            alt={name} />
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        )
+    };
 
     return (
         <Card>
@@ -85,57 +138,59 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         {
                             <>
                                 {
-
                                     types.map((type, index) => (
                                         <img key={index} src={type} alt={type} height={30} />
                                     ))
-
-
                                 }
-                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                    <IconButton onClick={() => playAnimation()}>
-                                        <PlayArrow fontSize='large' htmlColor='#038a8c' />
-                                    </IconButton>
-                                    <IconButton onClick={() => convertToshiny()}>
-                                        <AutoAwesome fontSize='large' htmlColor='#eef11c' />
-                                    </IconButton>
+                                <Box sx={boxSx}>
+                                    {
+                                        renderIconButton({
+                                            IconComponent: PlayArrow,
+                                            onClick: playAnimation,
+                                            iconProps: iconBtnStyle.playAnimation
+                                        })
+                                    }
+                                    {
+                                        renderIconButton({
+                                            IconComponent: AutoAwesome,
+                                            onClick: convertToshiny,
+                                            iconProps: iconBtnStyle.convertToshiny
+                                        })
+                                    }
                                 </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                    {/* <IconButton onClick={() => playAnimation()}>
-                                        <LocalFireDepartment fontSize='large' htmlColor='#ffa601' />
-                                    </IconButton> */}
-                                    <IconButton onClick={() => convertToshiny()}>
-                                        <NoteAdd fontSize='large' htmlColor='#ce6004' />
-                                    </IconButton>
+                                <Box sx={boxSx}>
+                                    {
+                                        renderIconButton({
+                                            IconComponent: NoteAdd,
+                                            onClick: () => setDialogState({ animationDialog: false, noteDialog: true }),
+                                            iconProps: iconBtnStyle.noteAdd
+                                        })
+                                    }
                                 </Box>
-                                {
-                                    dialogState.animationDialog &&
-                                    SimpleDialog({
-                                        open: dialogState.animationDialog, title: name, content: (<Card sx={{}}>
-                                            <CardActionArea>
-                                                <CardContent>
-                                                    <CardMedia
-                                                        component="img"
-                                                        src={animationSrc}
-                                                        alt={name}
-                                                    />
-                                                </CardContent>
-                                            </CardActionArea>
-                                        </Card>)
-                                        , onCloseDialog: () => onCloseAnimationDialog(),
-                                        voice: voice
-                                    })
-                                }
                             </>
 
                         }
                     </Typography>
+
+                    {dialogState.animationDialog && SimpleDialog({
+                        open: dialogState.animationDialog,
+                        title: name,
+                        content: (
+                            cardContent.animationContent
+                        ),
+                        onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
+                        voice: voice
+                    })}
                 </CardContent>
 
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                    <IconButton onClick={() => flipPokemon()}>
-                        <FlipCameraIos fontSize='large' htmlColor='#f10d0d' />
-                    </IconButton>
+                <Box sx={boxSx}>
+                    {
+                        renderIconButton({
+                            IconComponent: FlipCameraIos,
+                            onClick: flipPokemon,
+                            iconProps: iconBtnStyle.flipPokemon
+                        })
+                    }
                 </Box>
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div" sx={{ color: '#000000' }}>

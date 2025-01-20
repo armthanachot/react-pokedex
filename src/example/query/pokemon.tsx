@@ -1,7 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
-
-//https://pokeapi.co/api/v2/pokemon
 
 const Pokemon = () => {
     const { data, refetch, isPending, error, isFetching } = useQuery({
