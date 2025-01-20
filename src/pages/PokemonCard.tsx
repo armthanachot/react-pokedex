@@ -4,12 +4,14 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import { Box, SvgIconOwnProps } from '@mui/material';
+import { Box, SvgIconOwnProps, TextField, Grid2, CardHeader } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
 import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
 import IconBtn from '../components/IconBtn';
 import { SvgIconComponent } from "@mui/icons-material";
+import { pokemonCardIconBtnStyle } from './config/pokemonCard';
+
 
 // change img to object of normal and shiny (contain front and back)
 export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number }) {
@@ -34,6 +36,13 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
             noteDialog: false
         });
     }, [dialogState.animationDialog]);
+
+    const openNote = useCallback(() => {
+        setDialogState({
+            animationDialog: false,
+            noteDialog: true
+        });
+    }, [dialogState.noteDialog]);
 
     const convertToshiny = useCallback(() => {
         setPokemonFunctionState(prevState => ({
@@ -63,26 +72,6 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         });
     }, [pokemonFunctionState.flip])
 
-    const iconBtnStyle: {
-        [key: string]: SvgIconOwnProps
-    } = {
-        playAnimation: {
-            fontSize: 'large',
-            htmlColor: '#038a8c'
-        },
-        convertToshiny: {
-            fontSize: 'large',
-            htmlColor: '#eef11c'
-        },
-        flipPokemon: {
-            fontSize: 'large',
-            htmlColor: '#f10d0d'
-        },
-        noteAdd: {
-            fontSize: 'medium',
-            htmlColor: '#ce6004'
-        }
-    }
 
     const boxSx = {
         display: 'flex',
@@ -109,14 +98,21 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         </Card>),
         noteContent: (
             <Card>
-                <CardActionArea>
-                    <CardContent>
-                        <CardMedia
-                            component="img"
-                            src={animationSrc}
-                            alt={name} />
-                    </CardContent>
-                </CardActionArea>
+                <Typography gutterBottom sx={{ color: 'black', fontSize: 14, display: 'flex', justifyContent: 'center', padding: 2 }}>
+                    Note
+                </Typography>
+                <CardContent>
+                    <Grid2 container spacing={2}>
+                        <Grid2 size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+                            <TextField id="standard-basic" fullWidth label="Title" variant="standard" sx={{ color: "black" }} />
+                        </Grid2>
+
+                        <Grid2 size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+
+                            <TextField id="standard-basic2" fullWidth label="Date" variant="standard" sx={{ color: "black"}} />
+                        </Grid2>
+                    </Grid2>
+                </CardContent>
             </Card>
         )
     };
@@ -147,14 +143,14 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                                         renderIconButton({
                                             IconComponent: PlayArrow,
                                             onClick: playAnimation,
-                                            iconProps: iconBtnStyle.playAnimation
+                                            iconProps: pokemonCardIconBtnStyle.playAnimation
                                         })
                                     }
                                     {
                                         renderIconButton({
                                             IconComponent: AutoAwesome,
                                             onClick: convertToshiny,
-                                            iconProps: iconBtnStyle.convertToshiny
+                                            iconProps: pokemonCardIconBtnStyle.convertToshiny
                                         })
                                     }
                                 </Box>
@@ -162,8 +158,8 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                                     {
                                         renderIconButton({
                                             IconComponent: NoteAdd,
-                                            onClick: () => setDialogState({ animationDialog: false, noteDialog: true }),
-                                            iconProps: iconBtnStyle.noteAdd
+                                            onClick: openNote,
+                                            iconProps: pokemonCardIconBtnStyle.noteAdd
                                         })
                                     }
                                 </Box>
@@ -181,6 +177,17 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
                         voice: voice
                     })}
+
+                    {dialogState.noteDialog && SimpleDialog({
+                        open: dialogState.noteDialog,
+                        title: name,
+                        content: (
+                            cardContent.noteContent
+                        ),
+                        onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
+                        voice: voice
+                    })}
+
                 </CardContent>
 
                 <Box sx={boxSx}>
@@ -188,7 +195,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         renderIconButton({
                             IconComponent: FlipCameraIos,
                             onClick: flipPokemon,
-                            iconProps: iconBtnStyle.flipPokemon
+                            iconProps: pokemonCardIconBtnStyle.flipPokemon
                         })
                     }
                 </Box>

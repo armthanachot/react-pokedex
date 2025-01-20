@@ -4,7 +4,7 @@ function SimpleDialog({ open, title, content, onCloseDialog, voice }: { open: bo
 
     return (
         <Dialog open={open} onClose={onCloseDialog}>
-            <DialogTitle> {title} </DialogTitle>
+            {/* <DialogTitle> {title} </DialogTitle> */}
             {content}
             <audio src={voice} autoPlay hidden></audio>
         </Dialog>
