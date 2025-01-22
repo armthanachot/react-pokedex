@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import { Box, SvgIconOwnProps, TextField, Grid2, CardHeader } from '@mui/material';
+import { Box, SvgIconOwnProps, TextField, Grid2 } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
 import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
@@ -185,7 +185,6 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                             cardContent.noteContent
                         ),
                         onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
-                        voice: voice
                     })}
 
                 </CardContent>

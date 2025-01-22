@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle } from "@mui/material";
+import { Dialog } from "@mui/material";
 
 function SimpleDialog({ open, title, content, onCloseDialog, voice }: { open: boolean, title: string, content: React.ReactNode, onCloseDialog: () => void, voice?: string }) {
 
@@ -6,7 +6,7 @@ function SimpleDialog({ open, title, content, onCloseDialog, voice }: { open: bo
         <Dialog open={open} onClose={onCloseDialog}>
             {/* <DialogTitle> {title} </DialogTitle> */}
             {content}
-            <audio src={voice} autoPlay hidden></audio>
+            {voice && <audio src={voice} autoPlay hidden></audio>}
         </Dialog>
     )
 }
