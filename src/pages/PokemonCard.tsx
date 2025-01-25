@@ -76,7 +76,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     const boxSx = {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
     }
 
     const renderIconButton = ({ IconComponent, onClick, iconProps }: { IconComponent: SvgIconComponent, onClick: MouseEventHandler, iconProps: SvgIconOwnProps }) => (
@@ -109,7 +109,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
 
                         <Grid2 size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
 
-                            <TextField id="standard-basic2" fullWidth label="Date" variant="standard" sx={{ color: "black"}} />
+                            <TextField id="standard-basic2" fullWidth label="Date" variant="standard" sx={{ color: "black" }} />
                         </Grid2>
                     </Grid2>
                 </CardContent>
@@ -118,11 +118,34 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     };
 
     return (
-        <Card>
+        // <Card sx={{ background: `linear-gradient(135deg, ${defaultImage.bgColor?.join(', ') || 'rgb(255, 255, 255)'})` }}>
+        <Card
+            sx={{
+                border: '10px solid transparent', // ตั้งค่าขอบเริ่มต้นให้โปร่งใส
+                borderImage: `linear-gradient(135deg, ${defaultImage.bgColor || 'rgb(255, 255, 255), rgb(200, 200, 200)'})`, // ใช้ gradient เป็น border
+                borderImageSlice: 1, // ทำให้ gradient ถูกตัดพอดีกับขอบ
+                backgroundColor: 'transparent', // ตั้งค่าสีพื้นหลังให้โปร่งใส
+            }}
+        >
             <CardActionArea>
-                <Typography variant="body2" color="black" sx={{ padding: 2 }}>
-                    {no}.
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', padding: 2 }}>
+                    <Box
+                        sx={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: '50%',
+                            border: `3px solid`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: 1
+                        }}
+                    >
+                        <Typography variant="body2" sx={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>
+                            {no}
+                        </Typography>
+                    </Box>
+                </Box>
                 <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <CardMedia
                         sx={{ padding: 2 }}
@@ -130,7 +153,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         src={pokemonImg.show}
                         alt={name}
                     />
-                    <Typography variant="body2" sx={{ color: 'text.secondary', marginLeft: 2 }}>
+                    <Typography variant="body2" sx={{ color: 'white', marginLeft: 2 }}>
                         {
                             <>
                                 {
@@ -198,8 +221,11 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         })
                     }
                 </Box>
-                <CardContent>
-                    <Typography gutterBottom variant="h6" component="div" sx={{ color: '#000000' }}>
+                <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    {/* , WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'  */}
+                    {/* <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', background: `linear-gradient(135deg, ${defaultImage.bgColor})`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}> */}
+                    <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}>
+                        <img src='src/assets/image.png' alt={name} width={25} height={25} style={{ marginRight: 4 }} />
                         {name}
                     </Typography>
                 </CardContent>

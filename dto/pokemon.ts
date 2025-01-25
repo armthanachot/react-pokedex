@@ -13,6 +13,7 @@ export type defaultImg = {
     back_default: string,
     front_shiny: string,
     back_shiny: string,
+    bgColor: string,
 }
 
 export type showDownImage = {
@@ -38,6 +39,7 @@ export type PokemonInfo = {
         back_default: string,
         front_shiny: string,
         back_shiny: string,
+        bgColor: string,
         other: {
             dream_world: {
                 front_default: string

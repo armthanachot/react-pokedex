@@ -13,11 +13,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* เพิ่มเพื่อรีเซ็ตสไตล์ */}
-      {/* <App /> */}
+      <App />
       {/* <DemoContext /> */}
       {/* <Query /> */}
       {/* <Snap /> */}
-      <ColorDetector></ColorDetector>
+      {/* <ColorDetector></ColorDetector> */}
     </ThemeProvider>
   </React.StrictMode>,
 );

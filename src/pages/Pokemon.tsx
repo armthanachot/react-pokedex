@@ -5,6 +5,7 @@ import PokemonCard from "./PokemonCard";
 import { Box, Grid2 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import './extension/str';
+import { getImagePalette } from "../utils/img";
 
 type PokemonContext = {
     pokemon: AllPokemon | undefined,
@@ -20,6 +21,8 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
         const results = await Promise.all(
             res.data.results.map(async (p: any) => {
                 const info: PokemonInfo = (await httpBase.api.get(p.url)).data;
+                info.sprites.bgColor = (await getImagePalette(info.sprites.front_default)).join(',');
+
                 const types = await Promise.all(
                     info.types.map(async (t: any) => {
                         const typeIcon: PokemonTypeIcon = (await httpBase.api.get(t.type.url)).data;
