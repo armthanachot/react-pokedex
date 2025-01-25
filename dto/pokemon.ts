@@ -58,7 +58,9 @@ export type PokemonInfo = {
             url: string,
             icon: PokemonTypeIcon
         }
-    }[]
+    }[],
+    name: string,
+    id: number,
 }
 
 export type PokemonResult = {
@@ -69,7 +71,7 @@ export type PokemonResult = {
 
 export type AllPokemon = {
     count: number,
-    next: string,
-    previous: null,
+    next?: string,
+    previous?: null,
     results: PokemonResult[]
 }
