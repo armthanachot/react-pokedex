@@ -3,7 +3,7 @@ import { HttpBase } from "../api/axios";
 import { AllPokemon, PokemonInfo, PokemonTypeIcon } from "../../dto/pokemon";
 import PokemonCard from "./PokemonCard";
 import { Box, Grid2 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import './extension/str';
 import { getImagePalette } from "../utils/img";
 
@@ -39,6 +39,19 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
         queryKey: ['pokemon', url], // ใช้ url เป็น key ของ query หาก url มีการเปลี่ยนแปลง query จะถูกเรียกใหม่ (built-in cache and state management, ทำให้ไม่ต้อง manage state ของ pokemon ด้วยตัวเอง)
         queryFn: () => fetchPokemon(url),
     })
+
+
+    const queryClient = useQueryClient();
+    queryClient.prefetchQuery({
+        queryKey: ['pokemon', pokemon?.next],
+        queryFn: () => fetchPokemon(pokemon?.next || ''),
+    })
+
+    queryClient.prefetchQuery({
+        queryKey: ['pokemon', pokemon?.previous],
+        queryFn: () => fetchPokemon(pokemon?.previous || ''),
+    })
+
 
     // ใช้ useCallback เพื่อป้องกันการเรียกใช้งานซ้ำๆ ของ function นี้ โดย function จะถูกเรียกต่อเมื่อ isLoading หรือ pokemon มีการเปลี่ยนแปลง และยังเหมาะกับ function ที่ถูกใช่้งานเป็น props ของ component อื่นๆ
     const handleNext = useCallback(() => {
