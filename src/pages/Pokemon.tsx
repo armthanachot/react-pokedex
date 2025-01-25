@@ -78,31 +78,34 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                 return fetchPokemonDetails(searchKey);
             }
             return fetchPokemon(url);
-        }
+        },
+        // placeholderData: (prev) => prev,
+        staleTime: 300000, // 5 นาที
     })
 
     const queryClient = useQueryClient();
-    queryClient.prefetchQuery({
-        queryKey: ['pokemonNext', pokemon?.next ? pokemon?.next : "no-url"],
-        queryFn: async () => {
-            if (pokemon?.next) {
-                return await fetchPokemon(pokemon?.next)
-            }
-            const obj: AllPokemon = { count: 0, results: [] }
-            return obj
-        },
-    })
 
-    queryClient.prefetchQuery({
-        queryKey: ['pokemonPrev', pokemon?.previous ? pokemon?.previous : "no-url"],
-        queryFn: async () => {
-            if (pokemon?.previous) {
-                return await fetchPokemon(pokemon?.previous)
-            }
-            const obj: AllPokemon = { count: 0, results: [] }
-            return obj
-        },
-    })
+    // Prefetch สำหรับ next
+    useEffect(() => {
+        console.log("next", pokemon?.next);
+        if (pokemon?.next) {
+            queryClient.prefetchQuery({
+                queryKey: ['pokemon', pokemon.next, isSearch],
+                queryFn: async () => fetchPokemon(pokemon.next || ''),
+            });
+        }
+    }, [pokemon?.next, isSearch, queryClient]);
+
+    // Prefetch สำหรับ previous
+    useEffect(() => {
+        console.log("previous", pokemon?.previous);
+        if (pokemon?.previous) {
+            queryClient.prefetchQuery({
+                queryKey: ['pokemon', pokemon.previous, isSearch],
+                queryFn: async () => fetchPokemon(pokemon.previous || '')
+            });
+        }
+    }, [pokemon?.previous, isSearch, queryClient]);
 
 
     // ใช้ useCallback เพื่อป้องกันการเรียกใช้งานซ้ำๆ ของ function นี้ โดย function จะถูกเรียกต่อเมื่อ isLoading หรือ pokemon มีการเปลี่ยนแปลง และยังเหมาะกับ function ที่ถูกใช่้งานเป็น props ของ component อื่นๆ
