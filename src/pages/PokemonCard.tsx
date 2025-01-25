@@ -191,24 +191,25 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         }
                     </Typography>
 
-                    {dialogState.animationDialog && SimpleDialog({
-                        open: dialogState.animationDialog,
-                        title: name,
-                        content: (
-                            cardContent.animationContent
-                        ),
-                        onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
-                        voice: voice
-                    })}
+                    {dialogState.animationDialog &&
+                        <SimpleDialog
+                            open={dialogState.animationDialog}
+                            content={cardContent.animationContent}
+                            onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
+                            voice={voice}
+                        />
 
-                    {dialogState.noteDialog && SimpleDialog({
-                        open: dialogState.noteDialog,
-                        title: name,
-                        content: (
-                            cardContent.noteContent
-                        ),
-                        onCloseDialog: () => setDialogState({ animationDialog: false, noteDialog: false }),
-                    })}
+                    }
+
+                    {dialogState.noteDialog &&
+                        <SimpleDialog
+                            open={dialogState.noteDialog}
+                            content={cardContent.noteContent}
+                            onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
+                        />
+
+
+                    }
 
                 </CardContent>
 

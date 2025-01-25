@@ -1,12 +1,18 @@
 import { Dialog } from "@mui/material";
+import { useEffect } from "react";
 
-function SimpleDialog({ open, title, content, onCloseDialog, voice }: { open: boolean, title: string, content: React.ReactNode, onCloseDialog: () => void, voice?: string }) {
+function SimpleDialog({ open, content, onCloseDialog, voice }: { open: boolean, content: React.ReactNode, onCloseDialog: () => void, voice?: string }) {
+    useEffect(() => {
+        if (voice) {
+            const audio = new Audio(voice);
+            audio.volume = 1
+            audio.play();
+        }
+    }, [voice]);
 
     return (
         <Dialog open={open} onClose={onCloseDialog}>
-            {/* <DialogTitle> {title} </DialogTitle> */}
             {content}
-            {voice && <audio src={voice} autoPlay hidden></audio>}
         </Dialog>
     )
 }
