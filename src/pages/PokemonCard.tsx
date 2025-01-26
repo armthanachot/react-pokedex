@@ -7,14 +7,14 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { Box, SvgIconOwnProps, TextField, Grid2 } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
-import { defaultImg, pokemonImage, showDownImage } from '../../dto/pokemon';
+import { defaultImg, pokemonImage, PokemonSpecies, showDownImage } from '../../dto/pokemon';
 import IconBtn from '../components/IconBtn';
 import { SvgIconComponent } from "@mui/icons-material";
 import { pokemonCardIconBtnStyle } from './config/pokemonCard';
 
 
 // change img to object of normal and shiny (contain front and back)
-export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number }) {
+export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no, species }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number, species?: PokemonSpecies }) {
 
     const [dialogState, setDialogState] = useState({
         animationDialog: false,
@@ -82,6 +82,16 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     const renderIconButton = ({ IconComponent, onClick, iconProps }: { IconComponent: SvgIconComponent, onClick: MouseEventHandler, iconProps: SvgIconOwnProps }) => (
         <IconBtn Icon={IconComponent} onClick={onClick} iconProp={iconProps} />
     );
+
+    const handleMagaEvo = () => {
+        const versions = species?.varieties.filter(v => v.pokemon.name.includes('-mega'));
+        if (versions && versions.length > 1) {
+            console.log(versions);
+        }else{
+            console.log(versions);
+            
+        }
+    }
 
     const cardContent: {
         [key: string]: ReactNode
@@ -178,14 +188,22 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                                     }
                                 </Box>
                                 <Box sx={boxSx}>
-                                    {
+                                    {/* {
                                         renderIconButton({
                                             IconComponent: NoteAdd,
                                             onClick: openNote,
                                             iconProps: pokemonCardIconBtnStyle.noteAdd
                                         })
+                                    } */}
+                                    {
+                                        species?.megaEvo && <img src='src/assets/mega-stone.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleMagaEvo} />
+
+                                    }
+                                    {
+                                        species?.gigantamaxEvo && <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} />
                                     }
                                 </Box>
+
                             </>
 
                         }
@@ -226,7 +244,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                     {/* , WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'  */}
                     {/* <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', background: `linear-gradient(135deg, ${defaultImage.bgColor})`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}> */}
                     <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}>
-                        <img src='src/assets/image.png' alt={name} width={25} height={25} style={{ marginRight: 4 }} />
+                        <img src='src/assets/pokeball.png' alt={name} width={25} height={25} style={{ marginRight: 4 }} />
                         {name}
                     </Typography>
                 </CardContent>

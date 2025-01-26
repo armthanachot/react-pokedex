@@ -1,7 +1,7 @@
 export type PokemonTypeIcon = {
-    sprites:{
-        "generation-viii":{
-            "sword-shield":{
+    sprites: {
+        "generation-viii": {
+            "sword-shield": {
                 name_icon: string
             }
         }
@@ -67,6 +67,21 @@ export type PokemonResult = {
     name: string,
     url: string,
     info: PokemonInfo
+    species?: PokemonSpecies
+}
+
+export type PokemonSpecies = {
+    base_happiness: number,
+    varieties: {
+        is_default: boolean,
+        pokemon: {
+            name: string,
+            url: string
+        }
+    }[],
+    info?: PokemonInfo
+    megaEvo: boolean
+    gigantamaxEvo: boolean
 }
 
 export type AllPokemon = {

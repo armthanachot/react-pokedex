@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { HttpBase } from "../api/axios";
-import { AllPokemon, PokemonInfo, PokemonTypeIcon } from "../../dto/pokemon";
+import { AllPokemon, PokemonInfo, PokemonTypeIcon, PokemonSpecies } from "../../dto/pokemon";
 import PokemonCard from "./PokemonCard";
 import { Box, Grid2 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -42,7 +42,9 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                         return { ...t, type: { ...t.type, icon: typeIcon } };
                     })
                 );
-                return { ...p, info: { ...info, types } };
+
+                const species = await fetchPokemonSpecies(info.id);
+                return { ...p, info: { ...info, types }, species, megaEvo: species.megaEvo };
             })
         );
 
@@ -70,6 +72,22 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
             results: [{ name: info.name, url: 'no-url', info: { ...info, types } }],
         };
     };
+
+    const fetchPokemonSpecies = async (id: number): Promise<PokemonSpecies> => {
+        const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
+        if (!species) {
+            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false };
+        }
+
+        for (const v of species.varieties) {
+            const info: PokemonInfo = (await httpBase.api.get(v.pokemon.url)).data;
+            species.info = info;
+        }
+
+        species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));
+        species.gigantamaxEvo = species.varieties.some(v => v.pokemon.name.includes('-gmax'));
+        return species;
+    }
 
     const { data: pokemon, isLoading } = useQuery<AllPokemon>({
         queryKey: ['pokemon', url, isSearch], // ใช้ url เป็น key ของ query หาก url มีการเปลี่ยนแปลง query จะถูกเรียกใหม่ (built-in cache and state management, ทำให้ไม่ต้อง manage state ของ pokemon ด้วยตัวเอง)
@@ -147,6 +165,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                             showDownImage={p.info.sprites.other.showdown}
                             voice={p.info.cries.legacy}
                             no={p.info.id}
+                            species={p.species}
                         />
                     </Grid2>
                 ))}
@@ -177,7 +196,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                         iconProp={{ sx: { color: 'white' } }}
                         onClick={handleSearch}
                     /> */}
-                    <img src='src/assets/image.png' width={50} height={50} style={{ cursor: 'pointer' }} onClick={handleSearch} />
+                    <img src='src/assets/pokeball.png' width={50} height={50} style={{ cursor: 'pointer' }} onClick={handleSearch} />
 
                 </Box>
                 <ChildPokemonCard />
