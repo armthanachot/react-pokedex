@@ -32,6 +32,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
 
     const [megaEvo, setMegaEvo] = useState<boolean>(false);
     const [gigantamaxEvo, setGigantaMaxEvo] = useState<boolean>(false);
+    const [primalEvo, setPrimalEvo] = useState<boolean>(false);
 
     const playAnimation = useCallback(() => {
         setDialogState({
@@ -125,10 +126,28 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         setGigantaMaxEvo(true);
     }
 
+    const handlePrimalEvo = () => {
+        const versions = species?.varieties.filter(v => v.pokemon.name.includes('-primal'));
+        if (versions && versions.length > 1) {
+            console.log(versions);
+        } else {
+            console.log(versions);
+            setPokemonImg((prevState) => {
+                return {
+                    ...prevState,
+                    show: versions && versions[0]?.pokemon?.info?.sprites?.front_default || prevState.show
+                }
+            });
+        }
+
+        setPrimalEvo(true);
+    }
+
     const handleDefaultImg = () => {
         setPokemonImg({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
         setMegaEvo(false);
         setGigantaMaxEvo(false);
+        setPrimalEvo(false);
     }
 
     const cardContent: {
@@ -261,6 +280,16 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                                         species?.gigantamaxEvo && (
                                             !gigantamaxEvo ?
                                                 <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleGigantamaxEvo} />
+                                                : renderIconButton({
+                                                    IconComponent: Restore,
+                                                    onClick: handleDefaultImg,
+                                                    iconProps: pokemonCardIconBtnStyle.restore
+                                                }))
+                                    }
+                                    {
+                                        species?.primalEvo && (
+                                            !primalEvo ?
+                                                <img src='src/assets/primal.png' width={60} height={60} style={{ cursor: 'pointer' }} onClick={handlePrimalEvo} />
                                                 : renderIconButton({
                                                     IconComponent: Restore,
                                                     onClick: handleDefaultImg,

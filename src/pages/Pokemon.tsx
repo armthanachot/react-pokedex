@@ -44,7 +44,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                 );
 
                 const species = await fetchPokemonSpecies(info.id);
-                return { ...p, info: { ...info, types }, species, megaEvo: species.megaEvo };
+                return { ...p, info: { ...info, types }, species };
             })
         );
 
@@ -66,17 +66,19 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
             })
         );
 
+        const species = await fetchPokemonSpecies(info.id);
+
         setIsSearch(false);
         return {
             count: 1,
-            results: [{ name: info.name, url: 'no-url', info: { ...info, types } }],
+            results: [{ name: info.name, url: 'no-url', info: { ...info, types }, species }],
         };
     };
 
     const fetchPokemonSpecies = async (id: number): Promise<PokemonSpecies> => {
         const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
         if (!species) {
-            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false };
+            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
         }
 
         for (const v of species.varieties) {
@@ -86,6 +88,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
 
         species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));
         species.gigantamaxEvo = species.varieties.some(v => v.pokemon.name.includes('-gmax'));
+        species.primalEvo = species.varieties.some(v => v.pokemon.name.includes('-primal'));
         return species;
     }
 

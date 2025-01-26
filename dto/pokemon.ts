@@ -83,6 +83,7 @@ export type PokemonSpecies = {
     }[],
     megaEvo: boolean
     gigantamaxEvo: boolean
+    primalEvo: boolean
 }
 
 export type AllPokemon = {
