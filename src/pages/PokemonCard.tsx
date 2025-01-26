@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, SvgIconOwnProps, TextField, Grid2 } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
-import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd } from '@mui/icons-material';
+import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd, Restore } from '@mui/icons-material';
 import { defaultImg, pokemonImage, PokemonSpecies, showDownImage } from '../../dto/pokemon';
 import IconBtn from '../components/IconBtn';
 import { SvgIconComponent } from "@mui/icons-material";
@@ -21,7 +21,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         noteDialog: false
     });
 
-    const [pokemonImg, setPokemonImg] = useState<pokemonImage>({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
+    const [pokemonImg, setPokemonImg] = useState<pokemonImage>({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default, showMultiple: [] });
 
     const [animationSrc, setAnimationSrc] = useState<string>(showDownImage.front_default);
 
@@ -29,6 +29,9 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         flip: false,
         shiny: false
     });
+
+    const [megaEvo, setMegaEvo] = useState<boolean>(false);
+    const [gigantamaxEvo, setGigantaMaxEvo] = useState<boolean>(false);
 
     const playAnimation = useCallback(() => {
         setDialogState({
@@ -86,11 +89,46 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     const handleMagaEvo = () => {
         const versions = species?.varieties.filter(v => v.pokemon.name.includes('-mega'));
         if (versions && versions.length > 1) {
+            setPokemonImg((prevState) => {
+                return {
+                    ...prevState,
+                    showMultiple: versions.map(v => v.pokemon?.info?.sprites.front_default).filter((img): img is string => img !== undefined)
+                }
+            });
+        } else {
             console.log(versions);
-        }else{
-            console.log(versions);
-            
+            setPokemonImg((prevState) => {
+                return {
+                    ...prevState,
+                    show: versions && versions.length > 0 ? versions[0].pokemon?.info?.sprites.front_default || prevState.show : prevState.show
+                }
+            });
         }
+
+        setMegaEvo(true);
+    }
+
+    const handleGigantamaxEvo = () => {
+        const versions = species?.varieties.filter(v => v.pokemon.name.includes('-gmax'));
+        if (versions && versions.length > 1) {
+            console.log(versions);
+        } else {
+            console.log(versions);
+            setPokemonImg((prevState) => {
+                return {
+                    ...prevState,
+                    show: versions && versions[0]?.pokemon?.info?.sprites?.front_default || prevState.show
+                }
+            });
+        }
+
+        setGigantaMaxEvo(true);
+    }
+
+    const handleDefaultImg = () => {
+        setPokemonImg({ front: defaultImage.front_default, back: defaultImage.back_default, show: defaultImage.front_default });
+        setMegaEvo(false);
+        setGigantaMaxEvo(false);
     }
 
     const cardContent: {
@@ -157,12 +195,26 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                     </Box>
                 </Box>
                 <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <CardMedia
-                        sx={{ padding: 2 }}
-                        component="img"
-                        src={pokemonImg.show}
-                        alt={name}
-                    />
+                    {
+                        (pokemonImg.showMultiple?.length ?? 0) > 0 ?
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                {(pokemonImg.showMultiple ?? []).map((img, index) => (
+                                    <CardMedia
+                                        sx={{ padding: 2 }}
+                                        component="img"
+                                        src={img}
+                                        alt={name}
+                                        key={index}
+                                    />
+                                ))}
+                            </Box>
+                            : <CardMedia
+                                sx={{ padding: 2 }}
+                                component="img"
+                                src={pokemonImg.show}
+                                alt={name}
+                            />
+                    }
                     <Typography variant="body2" sx={{ color: 'white', marginLeft: 2 }}>
                         {
                             <>
@@ -196,11 +248,24 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                                         })
                                     } */}
                                     {
-                                        species?.megaEvo && <img src='src/assets/mega-stone.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleMagaEvo} />
-
+                                        species?.megaEvo &&
+                                        (!megaEvo ?
+                                            <img src='src/assets/mega-stone.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleMagaEvo} />
+                                            : renderIconButton({
+                                                IconComponent: Restore,
+                                                onClick: handleDefaultImg,
+                                                iconProps: pokemonCardIconBtnStyle.restore
+                                            }))
                                     }
                                     {
-                                        species?.gigantamaxEvo && <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} />
+                                        species?.gigantamaxEvo && (
+                                            !gigantamaxEvo ?
+                                                <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleGigantamaxEvo} />
+                                                : renderIconButton({
+                                                    IconComponent: Restore,
+                                                    onClick: handleDefaultImg,
+                                                    iconProps: pokemonCardIconBtnStyle.restore
+                                                }))
                                     }
                                 </Box>
 

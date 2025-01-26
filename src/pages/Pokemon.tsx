@@ -81,7 +81,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
 
         for (const v of species.varieties) {
             const info: PokemonInfo = (await httpBase.api.get(v.pokemon.url)).data;
-            species.info = info;
+            v.pokemon.info = info;
         }
 
         species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));

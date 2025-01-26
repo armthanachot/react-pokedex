@@ -27,6 +27,7 @@ export type pokemonImage = {
     front: string,
     back: string,
     show: string,
+    showMultiple?: string[]
 }
 
 export type PokemonInfo = {
@@ -77,9 +78,9 @@ export type PokemonSpecies = {
         pokemon: {
             name: string,
             url: string
+            info?: PokemonInfo
         }
     }[],
-    info?: PokemonInfo
     megaEvo: boolean
     gigantamaxEvo: boolean
 }

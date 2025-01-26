@@ -18,7 +18,11 @@ const pokemonCardIconBtnStyle: {
     noteAdd: {
         fontSize: 'medium',
         htmlColor: '#ce6004'
-    }
+    },
+    restore: {
+        fontSize: 'medium',
+        htmlColor: '#0d0df1'
+    },
 }
 
 export { pokemonCardIconBtnStyle }
