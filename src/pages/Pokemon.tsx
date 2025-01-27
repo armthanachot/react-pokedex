@@ -76,20 +76,24 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
     };
 
     const fetchPokemonSpecies = async (id: number): Promise<PokemonSpecies> => {
-        const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
-        if (!species) {
+        try {
+            const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
+            if (!species) {
             return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
-        }
+            }
 
-        for (const v of species.varieties) {
+            for (const v of species.varieties) {
             const info: PokemonInfo = (await httpBase.api.get(v.pokemon.url)).data;
             v.pokemon.info = info;
-        }
+            }
 
-        species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));
-        species.gigantamaxEvo = species.varieties.some(v => v.pokemon.name.includes('-gmax'));
-        species.primalEvo = species.varieties.some(v => v.pokemon.name.includes('-primal'));
-        return species;
+            species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));
+            species.gigantamaxEvo = species.varieties.some(v => v.pokemon.name.includes('-gmax'));
+            species.primalEvo = species.varieties.some(v => v.pokemon.name.includes('-primal'));
+            return species;
+        } catch (error) {
+            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
+        }
     }
 
     const { data: pokemon, isLoading } = useQuery<AllPokemon>({
@@ -166,9 +170,8 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                             name={p.name}
                             types={p.info.types.map(t => t.type.icon.sprites["generation-viii"]["sword-shield"].name_icon)}
                             showDownImage={p.info.sprites.other.showdown}
-                            voice={p.info.cries.legacy}
-                            no={p.info.id}
                             species={p.species}
+                            pokemonResult={p}
                         />
                     </Grid2>
                 ))}

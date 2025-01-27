@@ -7,14 +7,14 @@ import CardActionArea from '@mui/material/CardActionArea';
 import { Box, SvgIconOwnProps, TextField, Grid2 } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
 import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd, Restore } from '@mui/icons-material';
-import { defaultImg, pokemonImage, PokemonSpecies, showDownImage } from '../../dto/pokemon';
+import { defaultImg, pokemonImage, PokemonResult, PokemonSpecies, showDownImage } from '../../dto/pokemon';
 import IconBtn from '../components/IconBtn';
 import { SvgIconComponent } from "@mui/icons-material";
 import { pokemonCardIconBtnStyle } from './config/pokemonCard';
 
 
 // change img to object of normal and shiny (contain front and back)
-export default function PokemonCard({ defaultImage, showDownImage, name, types, voice, no, species }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], voice?: string, no?: number, species?: PokemonSpecies }) {
+export default function PokemonCard({ defaultImage, showDownImage, name, types, species, pokemonResult: p }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], species?: PokemonSpecies, pokemonResult: PokemonResult }) {
 
     const [dialogState, setDialogState] = useState({
         animationDialog: false,
@@ -209,7 +209,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                         }}
                     >
                         <Typography variant="body2" sx={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>
-                            {no}
+                            {p.info.id}
                         </Typography>
                     </Box>
                 </Box>
@@ -308,7 +308,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                             open={dialogState.animationDialog}
                             content={cardContent.animationContent}
                             onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
-                            voice={voice}
+                            voice={p.info.cries.legacy}
                         />
 
                     }
