@@ -6,11 +6,12 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Box, SvgIconOwnProps, TextField, Grid2 } from '@mui/material';
 import SimpleDialog from '../components/Dialog';
-import { AutoAwesome, PlayArrow, FlipCameraIos, NoteAdd, Restore } from '@mui/icons-material';
+import { AutoAwesome, PlayArrow, FlipCameraIos, Restore } from '@mui/icons-material';
 import { defaultImg, pokemonImage, PokemonResult, PokemonSpecies, showDownImage } from '../../dto/pokemon';
 import IconBtn from '../components/IconBtn';
 import { SvgIconComponent } from "@mui/icons-material";
 import { pokemonCardIconBtnStyle } from './config/pokemonCard';
+import { useNavigate } from 'react-router-dom';
 
 
 // change img to object of normal and shiny (contain front and back)
@@ -40,13 +41,6 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
             noteDialog: false
         });
     }, [dialogState.animationDialog]);
-
-    const openNote = useCallback(() => {
-        setDialogState({
-            animationDialog: false,
-            noteDialog: true
-        });
-    }, [dialogState.noteDialog]);
 
     const convertToshiny = useCallback(() => {
         setPokemonFunctionState(prevState => ({
@@ -150,6 +144,12 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
         setPrimalEvo(false);
     }
 
+    const navigate = useNavigate();
+
+    const openDetailPage = () => {
+        return navigate("/detail")
+    }
+
     const cardContent: {
         [key: string]: ReactNode
     } = {
@@ -194,155 +194,149 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
                 backgroundColor: 'transparent', // ตั้งค่าสีพื้นหลังให้โปร่งใส
             }}
         >
-            <CardActionArea>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', padding: 2 }}>
-                    <Box
-                        sx={{
-                            width: 30,
-                            height: 30,
-                            borderRadius: '50%',
-                            border: `3px solid`,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: 1
-                        }}
-                    >
-                        <Typography variant="body2" sx={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>
-                            {p.info.id}
-                        </Typography>
-                    </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', padding: 2 }}>
+                <Box
+                    sx={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: '50%',
+                        border: `3px solid`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 1
+                    }}
+                >
+                    <Typography variant="body2" sx={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>
+                        {p.info.id}
+                    </Typography>
                 </Box>
-                <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            </Box>
+            <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                {
+                    (pokemonImg.showMultiple?.length ?? 0) > 0 ?
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            {(pokemonImg.showMultiple ?? []).map((img, index) => (
+                                <CardMedia
+                                    sx={{ padding: 2 }}
+                                    component="img"
+                                    src={img}
+                                    alt={name}
+                                    key={index}
+                                />
+                            ))}
+                        </Box>
+                        : <CardMedia
+                            sx={{ padding: 2 }}
+                            component="img"
+                            src={pokemonImg.show}
+                            alt={name}
+                        />
+                }
+                <Typography variant="body2" sx={{ color: 'white', marginLeft: 2 }}>
                     {
-                        (pokemonImg.showMultiple?.length ?? 0) > 0 ?
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                {(pokemonImg.showMultiple ?? []).map((img, index) => (
-                                    <CardMedia
-                                        sx={{ padding: 2 }}
-                                        component="img"
-                                        src={img}
-                                        alt={name}
-                                        key={index}
-                                    />
-                                ))}
-                            </Box>
-                            : <CardMedia
-                                sx={{ padding: 2 }}
-                                component="img"
-                                src={pokemonImg.show}
-                                alt={name}
-                            />
-                    }
-                    <Typography variant="body2" sx={{ color: 'white', marginLeft: 2 }}>
-                        {
-                            <>
+                        <>
+                            {
+                                types.map((type, index) => (
+                                    <img key={index} src={type} alt={type} height={30} />
+                                ))
+                            }
+                            <Box sx={boxSx}>
                                 {
-                                    types.map((type, index) => (
-                                        <img key={index} src={type} alt={type} height={30} />
-                                    ))
+                                    renderIconButton({
+                                        IconComponent: PlayArrow,
+                                        onClick: playAnimation,
+                                        iconProps: pokemonCardIconBtnStyle.playAnimation
+                                    })
                                 }
-                                <Box sx={boxSx}>
-                                    {
-                                        renderIconButton({
-                                            IconComponent: PlayArrow,
-                                            onClick: playAnimation,
-                                            iconProps: pokemonCardIconBtnStyle.playAnimation
-                                        })
-                                    }
-                                    {
-                                        renderIconButton({
-                                            IconComponent: AutoAwesome,
-                                            onClick: convertToshiny,
-                                            iconProps: pokemonCardIconBtnStyle.convertToshiny
-                                        })
-                                    }
-                                </Box>
-                                <Box sx={boxSx}>
-                                    {/* {
-                                        renderIconButton({
-                                            IconComponent: NoteAdd,
-                                            onClick: openNote,
-                                            iconProps: pokemonCardIconBtnStyle.noteAdd
-                                        })
-                                    } */}
-                                    {
-                                        species?.megaEvo &&
-                                        (!megaEvo ?
-                                            <img src='src/assets/mega-stone.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleMagaEvo} />
+                                {
+                                    renderIconButton({
+                                        IconComponent: AutoAwesome,
+                                        onClick: convertToshiny,
+                                        iconProps: pokemonCardIconBtnStyle.convertToshiny
+                                    })
+                                }
+                            </Box>
+                            <Box sx={boxSx}>
+                                {
+                                    species?.megaEvo &&
+                                    (!megaEvo ?
+                                        <img src='src/assets/mega-stone.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleMagaEvo} />
+                                        : renderIconButton({
+                                            IconComponent: Restore,
+                                            onClick: handleDefaultImg,
+                                            iconProps: pokemonCardIconBtnStyle.restore
+                                        }))
+                                }
+                                {
+                                    species?.gigantamaxEvo && (
+                                        !gigantamaxEvo ?
+                                            <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleGigantamaxEvo} />
                                             : renderIconButton({
                                                 IconComponent: Restore,
                                                 onClick: handleDefaultImg,
                                                 iconProps: pokemonCardIconBtnStyle.restore
                                             }))
-                                    }
-                                    {
-                                        species?.gigantamaxEvo && (
-                                            !gigantamaxEvo ?
-                                                <img src='src/assets/gigantamax.png' width={35} height={35} style={{ cursor: 'pointer' }} onClick={handleGigantamaxEvo} />
-                                                : renderIconButton({
-                                                    IconComponent: Restore,
-                                                    onClick: handleDefaultImg,
-                                                    iconProps: pokemonCardIconBtnStyle.restore
-                                                }))
-                                    }
-                                    {
-                                        species?.primalEvo && (
-                                            !primalEvo ?
-                                                <img src='src/assets/primal.png' width={60} height={60} style={{ cursor: 'pointer' }} onClick={handlePrimalEvo} />
-                                                : renderIconButton({
-                                                    IconComponent: Restore,
-                                                    onClick: handleDefaultImg,
-                                                    iconProps: pokemonCardIconBtnStyle.restore
-                                                }))
-                                    }
-                                </Box>
+                                }
+                                {
+                                    species?.primalEvo && (
+                                        !primalEvo ?
+                                            <img src='src/assets/primal.png' width={60} height={60} style={{ cursor: 'pointer' }} onClick={handlePrimalEvo} />
+                                            : renderIconButton({
+                                                IconComponent: Restore,
+                                                onClick: handleDefaultImg,
+                                                iconProps: pokemonCardIconBtnStyle.restore
+                                            }))
+                                }
+                            </Box>
 
-                            </>
-
-                        }
-                    </Typography>
-
-                    {dialogState.animationDialog &&
-                        <SimpleDialog
-                            open={dialogState.animationDialog}
-                            content={cardContent.animationContent}
-                            onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
-                            voice={p.info.cries.legacy}
-                        />
+                        </>
 
                     }
+                </Typography>
 
-                    {dialogState.noteDialog &&
-                        <SimpleDialog
-                            open={dialogState.noteDialog}
-                            content={cardContent.noteContent}
-                            onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
-                        />
+                {dialogState.animationDialog &&
+                    <SimpleDialog
+                        open={dialogState.animationDialog}
+                        content={cardContent.animationContent}
+                        onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
+                        voice={p.info.cries.legacy}
+                    />
+
+                }
+
+                {dialogState.noteDialog &&
+                    <SimpleDialog
+                        open={dialogState.noteDialog}
+                        content={cardContent.noteContent}
+                        onCloseDialog={() => setDialogState({ animationDialog: false, noteDialog: false })}
+                    />
 
 
-                    }
+                }
 
-                </CardContent>
+            </CardContent>
 
-                <Box sx={boxSx}>
-                    {
-                        renderIconButton({
-                            IconComponent: FlipCameraIos,
-                            onClick: flipPokemon,
-                            iconProps: pokemonCardIconBtnStyle.flipPokemon
-                        })
-                    }
-                </Box>
-                <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    {/* , WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'  */}
-                    {/* <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', background: `linear-gradient(135deg, ${defaultImage.bgColor})`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}> */}
-                    <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}>
-                        <img src='src/assets/pokeball.png' alt={name} width={25} height={25} style={{ marginRight: 4 }} />
-                        {name}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
+            <Box sx={boxSx}>
+                {
+                    renderIconButton({
+                        IconComponent: FlipCameraIos,
+                        onClick: flipPokemon,
+                        iconProps: pokemonCardIconBtnStyle.flipPokemon
+                    })
+                }
+            </Box>
+            <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                {/* , WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'  */}
+                {/* <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', background: `linear-gradient(135deg, ${defaultImage.bgColor})`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}> */}
+                <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0.5, width: '100%', color: 'white' }}>
+                    <img src='src/assets/pokeball.png' alt={name} width={25} height={25} style={{ marginRight: 4 }} />
+                    <Box
+                        onClick={openDetailPage}
+                        sx={{ cursor: 'pointer' }}
+                    > {name}</Box>
+                </Typography>
+            </CardContent>
         </Card>
     );
 }

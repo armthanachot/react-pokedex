@@ -197,11 +197,6 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
                         sx={{ backgroundColor: 'grey' }}
                         autoFocus
                     />
-                    {/* <IconBtn
-                        Icon={Search}
-                        iconProp={{ sx: { color: 'white' } }}
-                        onClick={handleSearch}
-                    /> */}
                     <img src='src/assets/pokeball.png' width={50} height={50} style={{ cursor: 'pointer' }} onClick={handleSearch} />
 
                 </Box>

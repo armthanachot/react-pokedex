@@ -62,6 +62,16 @@ export type PokemonInfo = {
     }[],
     name: string,
     id: number,
+    stats: PokemonStat[],
+}
+
+export type PokemonStat = {
+    base_stat: number,
+    effort: number,
+    stat: {
+        name: string,
+        url: string
+    }
 }
 
 export type PokemonResult = {
@@ -89,6 +99,6 @@ export type PokemonSpecies = {
 export type AllPokemon = {
     count: number,
     next?: string,
-    previous?: null,
+    previous?: string | null,
     results: PokemonResult[]
 }

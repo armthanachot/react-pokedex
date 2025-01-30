@@ -8,16 +8,18 @@ import theme from './theme';
 import DemoContext from './example/context/Demo';
 import Query from './example/query/PokemonIndex';
 import Snap from './example/snapshot/Index';
+import { FormEx } from './example/form';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* เพิ่มเพื่อรีเซ็ตสไตล์ */}
+      <CssBaseline />
       <App />
       {/* <DemoContext /> */}
       {/* <Query /> */}
       {/* <Snap /> */}
       {/* <ColorDetector></ColorDetector> */}
+      {/* <FormEx></FormEx> */}
     </ThemeProvider>
   </React.StrictMode>,
 );
