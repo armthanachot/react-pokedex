@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useCallback, useState, Context, useContext, useEffect } from 'react';
-import { AllPokemon, PokemonInfo, PokemonResult, PokemonSpecies, PokemonTypeIcon } from '../../../dto/pokemon';
+import { createContext, ReactNode, useCallback, useState, useContext, useEffect } from 'react';
+import { AllPokemon, PokemonInfo, PokemonSpecies, PokemonTypeIcon } from '../../../dto/pokemon';
 import { HttpBase } from '../../api/axios';
 import { getImagePalette } from '../../utils/img';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -24,7 +24,6 @@ export const PokemonProvider = ({ children }: Props) => {
     const httpBase = new HttpBase();
     const [url, setUrl] = useState<string>('https://pokeapi.co/api/v2/pokemon');
     const [searchKey, setSearchKey] = useState<string>('');
-    const [isSearch, setIsSearch] = useState<boolean>(false);
 
     const fetchPokemon = async (url: string): Promise<AllPokemon> => {
         const res = await httpBase.api.get(url);
@@ -44,7 +43,6 @@ export const PokemonProvider = ({ children }: Props) => {
                 return { ...p, info: { ...info, types }, species };
             })
         );
-        setIsSearch(false);
         return { ...res.data, results };
     };
 
@@ -65,7 +63,6 @@ export const PokemonProvider = ({ children }: Props) => {
 
         const species = await fetchPokemonSpecies(info.id);
 
-        setIsSearch(false);
         return {
             count: 1,
             results: [{ name: info.name, url: 'no-url', info: { ...info, types }, species }],
@@ -143,10 +140,8 @@ export const PokemonProvider = ({ children }: Props) => {
 
     const handleSearch = () => {
         if (searchKey.trim() !== '') {
-            setIsSearch(true);
             setUrl(`https://pokeapi.co/api/v2/pokemon/${searchKey.toLowerCase()}`);
         } else {
-            setIsSearch(false);
             setUrl('https://pokeapi.co/api/v2/pokemon');
         }
     };

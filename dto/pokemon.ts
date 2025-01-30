@@ -14,6 +14,21 @@ export type defaultImg = {
     front_shiny: string,
     back_shiny: string,
     bgColor: string,
+    other: {
+        dream_world: {
+            front_default: string
+        },
+        showdown: {
+            front_default: string,
+            back_default: string,
+            front_shiny: string,
+            back_shiny: string,
+        },
+        "official-artwork": {
+            front_default: string
+            front_shiny: string
+        }
+    }
 }
 
 export type showDownImage = {
@@ -50,6 +65,10 @@ export type PokemonInfo = {
                 back_default: string,
                 front_shiny: string,
                 back_shiny: string,
+            },
+            "official-artwork": {
+                front_default: string
+                front_shiny: string
             }
         }
     },
