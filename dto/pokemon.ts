@@ -101,6 +101,10 @@ export type PokemonResult = {
 }
 
 export type PokemonSpecies = {
+    color: {
+        name: string,
+        url: string
+    },
     base_happiness: number,
     varieties: {
         is_default: boolean,

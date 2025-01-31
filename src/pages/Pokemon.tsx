@@ -79,12 +79,12 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
         try {
             const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
             if (!species) {
-            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
+                return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false, color: { name: '', url: '' } };
             }
 
             for (const v of species.varieties) {
-            const info: PokemonInfo = (await httpBase.api.get(v.pokemon.url)).data;
-            v.pokemon.info = info;
+                const info: PokemonInfo = (await httpBase.api.get(v.pokemon.url)).data;
+                v.pokemon.info = info;
             }
 
             species.megaEvo = species.varieties.some(v => v.pokemon.name.includes('-mega'));
@@ -92,7 +92,7 @@ function Pokemon({ httpBase }: { httpBase: HttpBase }) {
             species.primalEvo = species.varieties.some(v => v.pokemon.name.includes('-primal'));
             return species;
         } catch (error) {
-            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
+            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false, color: { name: '', url: '' } };
         }
     }
 

@@ -147,9 +147,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     const navigate = useNavigate();
 
     const openDetailPage = () => {
-        console.log("info", p.info);
-
-        return navigate("/detail", { state: { defaultImage: defaultImage, info: p.info, types } });
+        return navigate("/detail", { state: { defaultImage: defaultImage, info: p.info, types, species } });
     }
 
     const cardContent: {
