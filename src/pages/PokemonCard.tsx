@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 // change img to object of normal and shiny (contain front and back)
-export default function PokemonCard({ defaultImage, showDownImage, name, types, species, pokemonResult: p }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], species?: PokemonSpecies, pokemonResult: PokemonResult }) {
+export default function PokemonCard({ defaultImage, showDownImage, name, types, species, pokemonResult: p, totalPokemon }: { defaultImage: defaultImg, showDownImage: showDownImage, name: string, types: string[], species?: PokemonSpecies, pokemonResult: PokemonResult, totalPokemon?: number }) {
 
     const [dialogState, setDialogState] = useState({
         animationDialog: false,
@@ -147,7 +147,7 @@ export default function PokemonCard({ defaultImage, showDownImage, name, types, 
     const navigate = useNavigate();
 
     const openDetailPage = () => {
-        return navigate("/detail", { state: { defaultImage: defaultImage, info: p.info, types, species } });
+        return navigate("/detail", { state: { defaultImage: defaultImage, info: p.info, types, species, totalPokemon } });
     }
 
     const cardContent: {

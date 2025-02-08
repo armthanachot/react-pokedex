@@ -3,7 +3,7 @@ import { usePokemonContext } from "./context/PokemonContext";
 import PokemonCard from "./PokemonCard";
 
 export default function Pokemon2() {
-    const { allPokemon, handleNext, handleBack, isLoading, handleSearch, searchKey, setSearchKey } = usePokemonContext();
+    const { allPokemon, handleNext, handleBack, isLoading, handleSearch, searchKey, setSearchKey, totalPokemon } = usePokemonContext();
 
     let gridItemSize = { xl: 4, lg: 4, md: 6, sm: 12 };
 
@@ -45,6 +45,7 @@ export default function Pokemon2() {
                             showDownImage={p.info.sprites.other.showdown}
                             species={p.species}
                             pokemonResult={p}
+                            totalPokemon={totalPokemon}
                         />
                     </Grid2>
                 ))}

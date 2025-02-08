@@ -125,3 +125,8 @@ export type AllPokemon = {
     previous?: string | null,
     results: PokemonResult[]
 }
+
+export type PokemonAllSelect = {
+    name: string,
+    defaultImage: defaultImg,
+}

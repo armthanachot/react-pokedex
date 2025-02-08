@@ -1,12 +1,11 @@
-import { AppBar, Button, Toolbar, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import HomeIcon from '@mui/icons-material/Home';
 import { defaultImg, PokemonInfo, PokemonSpecies } from "../../dto/pokemon";
 import { useLocation } from "react-router-dom";
 import { Radar } from "react-chartjs-2";
 import { Chart as ChartJS, RadialLinearScale, CategoryScale, PointElement, LineElement, Title, Tooltip, Legend, ChartData } from "chart.js";
-import { getImagePalette } from "../utils/img";
-import { useEffect, useState } from "react";
+import { HttpBase } from "../api/axios";
 
 ChartJS.register(
     RadialLinearScale,
@@ -19,11 +18,11 @@ ChartJS.register(
 );
 
 export default function PokemonDetail() {
+    const httpBase = new HttpBase();
     const location = useLocation();
-    const { defaultImage, info, types, species }: { defaultImage: defaultImg, info: PokemonInfo, types: string[], species: PokemonSpecies } = location.state || {};
+    const { defaultImage, info, types, species, totalPokemon }: { defaultImage: defaultImg, info: PokemonInfo, types: string[], species: PokemonSpecies, totalPokemon?: number } = location.state || {};
 
     const stats = info.stats.map((s) => s.base_stat);
-    // const [bgs, setBgs] = useState<string[]>([]);
 
     const data: ChartData<"radar", number[], string> = {
         labels: info.stats.map((s) => s.stat.name), // Radar labels
@@ -73,15 +72,6 @@ export default function PokemonDetail() {
         color: 'rgb(255, 255, 255)',
     }
 
-    // useEffect(() => {
-    //     const fetchBgs = async () => {
-    //         const bgs = await getImagePalette(defaultImage.other["official-artwork"].front_default);
-    //         setBgs(bgs);
-    //     }
-
-    //     fetchBgs();
-    // }, []);
-
     const handleBack = () => {
         window.history.back();
     }
@@ -129,7 +119,7 @@ export default function PokemonDetail() {
 
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 10, gap: 2 }}>
                 <img src={defaultImage.other["official-artwork"].front_default} alt={info.name} width={250} height={250} />
-                <Radar data={data} options={options} style={{ width: 500, height: 500, maxWidth:500, maxHeight:500 }} />
+                <Radar data={data} options={options} style={{ width: 400, height: 400, maxWidth: 400, maxHeight: 400 }} />
             </Box>
 
 

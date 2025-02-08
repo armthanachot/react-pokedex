@@ -12,6 +12,7 @@ type pokemonContextType = {
     handleSearch: () => void
     searchKey: string
     setSearchKey: React.Dispatch<React.SetStateAction<string>>
+    totalPokemon?: number
 }
 
 export const PokemonContext = createContext({} as pokemonContextType)
@@ -73,7 +74,7 @@ export const PokemonProvider = ({ children }: Props) => {
         try {
             const species: PokemonSpecies = (await httpBase.api.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)).data;
             if (!species) {
-                return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
+                return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false, color: { name: 'rgb(255, 255, 255)', url: '' } };
             }
 
             for (const v of species.varieties) {
@@ -86,7 +87,7 @@ export const PokemonProvider = ({ children }: Props) => {
             species.primalEvo = species.varieties.some(v => v.pokemon.name.includes('-primal'));
             return species;
         } catch (error) {
-            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false };
+            return { base_happiness: 0, varieties: [], megaEvo: false, gigantamaxEvo: false, primalEvo: false, color: { name: 'rgb(255, 255, 255)', url: '' } };
         }
     }
 
@@ -146,8 +147,11 @@ export const PokemonProvider = ({ children }: Props) => {
         }
     };
 
+    console.log("pokemonCount", pokemon?.count);
+    
+
     return (
-        <PokemonContext.Provider value={{ allPokemon: pokemon, handleNext, handleBack, isLoading, handleSearch, searchKey, setSearchKey }}>
+        <PokemonContext.Provider value={{ allPokemon: pokemon, handleNext, handleBack, isLoading, handleSearch, searchKey, setSearchKey, totalPokemon: pokemon?.count }}>
             {children}
         </PokemonContext.Provider>
     )
