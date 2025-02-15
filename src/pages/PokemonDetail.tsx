@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Box, Container, TextField, Button, colors } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Container, TextField, Button } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import HomeIcon from '@mui/icons-material/Home';
 import CopyIcon from '@mui/icons-material/CopyAll';
@@ -97,7 +97,7 @@ export default function PokemonDetail() {
 
     type PromptReqFormType = z.infer<typeof promptRequestSchema>;
 
-    const imageRequestSchema = z.object({
+    const imageHFRequestSchema = z.object({
         inputs: z.string().nonempty("Prompt cannot be empty"),
         target_size: z.object({
             width: z.number(),
@@ -105,18 +105,38 @@ export default function PokemonDetail() {
         })
     });
 
-    type ImageReqFormType = z.infer<typeof imageRequestSchema>;
+    type ImageHFReqFormType = z.infer<typeof imageHFRequestSchema>;
 
-    const generateImageAI = async (prompt: string) => {
-        const data: ImageReqFormType = {
+    const imageOpenAIRequestSchema = z.object({
+        prompt: z.string().nonempty("Prompt cannot be empty"),
+        size:z.union([z.literal("256x256"), z.literal("512x512"), z.literal("1024x1024"), z.literal("1792x1024"), z.literal("1024x1792")])
+    });
+
+    type ImageOpenAIReqFormType = z.infer<typeof imageOpenAIRequestSchema>;
+
+    const generateImageAIHF = async (prompt: string) => {
+        const data: ImageHFReqFormType = {
             inputs: prompt,
             target_size: {
-                width: 256,
-                height: 256
+                width: 128,
+                height: 128
             }
         }
         setLoadImage(true);
         const resp: { imagePath: string } = (await httpBase.api.post("/hugging-face/image", data)).data;
+        console.log("image: ", resp);
+        setAiImageUrl(resp.imagePath);
+        setLoadImage(false);
+    }
+
+    const generateImageAIOpenAI = async (prompt: string) => {
+        const data: ImageOpenAIReqFormType = {
+            prompt: prompt,
+            // size: "256x256"
+            size: "1024x1024" // minimum size for dall-e 3
+        }
+        setLoadImage(true);
+        const resp: { imagePath: string } = (await httpBase.api.post("/openai/image", data)).data;
         console.log("image: ", resp);
         setAiImageUrl(resp.imagePath);
         setLoadImage(false);
@@ -135,12 +155,15 @@ export default function PokemonDetail() {
             resolver: zodResolver(promptRequestSchema),
             defaultValues: {
                 role: "Pokemon art director & designer",
-                input: `give me a AI prompt to generate image for this description: ${info.name} in Christmas style, response format only prompt.`
+                input: `${info.name} in Christmas style`
             }
         });
 
         const onSubmit = async (data: PromptReqFormType) => {
             console.log("✅ Form Data:", data);
+            data.input = `give me a AI prompt to generate image for this description: ${data.input}, 
+            i want image style to match the latest Pokémon anime series (Pokémon Horizons), 
+            response format only prompt.`
             const resp: { prompt: string } = (await httpBase.api.post("/openai/prompt", data)).data;
             setPrompt(resp.prompt);
         };
@@ -207,7 +230,7 @@ export default function PokemonDetail() {
                                 <IconButton onClick={() => navigator.clipboard.writeText(prompt)} sx={{ ml: 1 }}>
                                     <CopyIcon />
                                 </IconButton>
-                                <IconButton onClick={() => generateImageAI(prompt)} sx={{ ml: 1 }}>
+                                <IconButton onClick={() => generateImageAIHF(prompt)} sx={{ ml: 1 }}>
                                     <AutoFixHightIcon />
                                 </IconButton>
                                 {loadImage ? <IconButton sx={{ ml: 1 }}> <HourGlassTopIcon /> </IconButton> : aiImageUrl ?
@@ -230,7 +253,7 @@ export default function PokemonDetail() {
             top: 0,
             left: 0,
             width: '100%',
-            height: '100vh', // Set height to full screen
+            height: 'auto', // Set height to full screen
             backgroundColor: 'grey',
             display: 'flex',
             flexDirection: 'column',
